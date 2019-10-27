@@ -96,10 +96,10 @@ test_data = batchify(corpus.test, eval_batch_size)
 ###############################################################################
 
 ntokens = 48
-if args.model == 'Transformer':
-    model = model.TransformerModel(ntokens, args.emsize, args.nhead, args.nhid, args.nlayers, args.dropout).to(device)
-else:
-    model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.tied).to(device)
+#if args.model == 'Transformer':
+model = model.TransformerModel(ntokens, args.emsize, args.nhead, args.nhid, args.nlayers, args.dropout).to(device)
+#else:
+    #model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.tied).to(device)
 
 criterion = nn.functional.l1_loss()
 
