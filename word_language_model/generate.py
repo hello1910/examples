@@ -48,31 +48,25 @@ with open(args.checkpoint, 'rb') as f:
 model.eval()
 
 corpus = data.Corpus(args.data)
-ntokens = len(corpus.dictionary)
+ntokens = 48 #potentially need to change!
 
 is_transformer_model = hasattr(model, 'model_type') and model.model_type == 'Transformer'
 if not is_transformer_model:
+    print("PROBLEM!!!!!")
     hidden = model.init_hidden(1)
 input = torch.randint(ntokens, (1, 1), dtype=torch.long).to(device)
 
 with open(args.outf, 'w') as outf:
     with torch.no_grad():  # no tracking history
-        for i in range(args.words):
+        for i in range(48):
             if is_transformer_model:
                 output = model(input, False)
-                word_weights = output[-1].squeeze().div(args.temperature).exp().cpu()
-                word_idx = torch.multinomial(word_weights, 1)[0]
-                word_tensor = torch.Tensor([[word_idx]]).long().to(device)
-                input = torch.cat([input, word_tensor], 0)
+                ans=output[-1].squeeze()
+                print(ans)
+                ##try this to output of previous .div(args.temperature).exp().cpu()
+                input = torch.cat([input, ans], 0)
             else:
                 output, hidden = model(input, hidden)
-                word_weights = output.squeeze().div(args.temperature).exp().cpu()
-                word_idx = torch.multinomial(word_weights, 1)[0]
-                input.fill_(word_idx)
-
-            word = corpus.dictionary.idx2word[word_idx]
-
-            outf.write(word + ('\n' if i % 20 == 19 else ' '))
-
-            if i % args.log_interval == 0:
-                print('| Generated {}/{} words'.format(i, args.words))
+                ans=output[-1].squeeze()
+                #try this to output of previous .div(args.temperature).exp().cpu()
+                input.fill_(ans)
