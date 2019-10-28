@@ -102,4 +102,4 @@ class TransformerModel(nn.Module):
         src = self.encoder(src) * math.sqrt(self.ninp)
         output = self.transformer_encoder(src, self.src_mask)
         output = self.decoder(output)
-        return F.l1_loss(output, dim=-1)
+        return output
